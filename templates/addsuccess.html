@@ -1,0 +1,24 @@
+{%include "menu.html"%}
+<!DOCTYPE html>
+<html>
+<head>
+  <title>学生成绩管理系统 by 1183710210李衡</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="/static/css/foundation.min.css">
+  <link rel="stylesheet" href="/static/fonts/foundation-icons.css">
+  <script src="/static/js/vendor/jquery.js"></script>
+  <script src="/static/js/vendor/jquery.form.js"></script>
+  <script src="/static/js/vendor/foundation.min.js"></script>
+  <script src="/static/js/vendor/what-input.js"></script>
+  <script>
+  $("#search").click(function(){
+    window.location.href="/score"+"?"+$("#searchcontent").val();
+  });
+  </script>
+</head>
+<body>
+  <script>alert("添加成功");window.location.href="/add";</script>
+  <script src="/static/js/app.js"></script>
+</body>
+</html>

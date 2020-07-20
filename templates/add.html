@@ -1,0 +1,94 @@
+{%include "menu.html"%}
+<!DOCTYPE html>
+<html>
+<head>
+  <title>学生成绩管理系统 by 1183710210李衡</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="/static/css/foundation.min.css">
+  <link rel="stylesheet" href="/static/fonts/foundation-icons.css">
+  <script src="/static/js/vendor/jquery.js"></script>
+  <script src="/static/js/vendor/jquery.form.js"></script>
+  <script src="/static/js/vendor/foundation.min.js"></script>
+  <script src="/static/js/vendor/what-input.js"></script>
+  <script>
+  $("#search").click(function(){
+    window.location.href="/score"+"?"+$("#searchcontent").val();
+  });
+  </script>
+</head>
+<body>
+  <br/>
+  <form id="inputform" name="input"  method="post">
+    {% csrf_token %}
+    <div class="grid-x">
+      <div class="text-right large-5 medium-5 small-5" ><h4>考号:&nbsp;&nbsp;</h4></div><div class="text-center large-2 medium-2 small-2" ><input type="text" name="stuid" id="stuidtext"/></div>
+    </div>
+    <br/>
+    <div class="grid-x">
+      <div class="text-right large-5 medium-5 small-5" ><h4>姓名:&nbsp;&nbsp;</h4></div><div class="text-center large-2 medium-2 small-2" ><input type="text" name="name" id="nametext"/></div>
+    </div>
+    <br/>
+    <div class="grid-x">
+      <div class="text-right large-5 medium-5 small-5" ><h4>语文:&nbsp;&nbsp;</h4></div><div class="text-center large-2 medium-2 small-2" ><input type="text" name="chinese" id="chinesetext"/></div>
+    </div>
+    <br/>
+    <div class="grid-x">
+      <div class="text-right large-5 medium-5 small-5" ><h4>数学:&nbsp;&nbsp;</h4></div><div class="text-center large-2 medium-2 small-2" ><input type="text" name="math" id="mathtext"/></div>
+    </div>
+    <br/>
+    <div class="grid-x">
+      <div class="text-right large-5 medium-5 small-5" ><h4>英语:&nbsp;&nbsp;</h4></div><div class="text-center large-2 medium-2 small-2" ><input type="text" name="english" id="englishtext"/></div>
+    </div>
+    <br/>
+    <div class="grid-x">
+      <div class="text-right large-5 medium-5 small-5" ><h4>物理:&nbsp;&nbsp;</h4></div><div class="text-center large-2 medium-2 small-2" ><input type="text" name="physics" id="physicstext"/></div>
+    </div>
+    <br/>
+    <div class="grid-x">
+      <div class="text-right large-5 medium-5 small-5" ><h4>化学:&nbsp;&nbsp;</h4></div><div class="text-center large-2 medium-2 small-2" ><input type="text" name="chemistry" id="chemistrytext"/></div>
+    </div>
+    <br/>
+  </form>
+  <div class="grid-x">
+      <div class="text-center large-12 medium-12 small-12"><button class="button" onclick="subm();">提交</button></div>
+  </div>
+  <div class="tiny reveal" id="success" data-reveal data-animation-in="slide-in-down" data-animation-out="slide-out-up">
+    <div class="text-center"><h3>添加成功！</h3></div>
+  </div>
+  <button data-open="success" id="openreveal" style="display:none;">添加成功</button>
+  <script>
+    function isnumber(a){
+        var n=/^[0-9]+$/;
+        if(a.match(n)!=null) return true;
+        else return false;
+    }
+    function subm(){
+      var stuid=document.forms["input"]["stuid"].value;
+        var name=document.forms["input"]["name"].value;
+        var chinese=document.forms["input"]["chinese"].value;
+        var math=document.forms["input"]["math"].value;
+        var english=document.forms["input"]["english"].value;
+        var physics=document.forms["input"]["physics"].value;
+        var chemistry=document.forms["input"]["chemistry"].value;
+      if(stuid==null||stuid==""||name==null||name==""||chinese==null||chinese==""||math==null||math==""||english==null||english==""||physics==null||physics==""||chemistry==null||chemistry==""){
+          alert("请输入所有数据。");
+      }else if(!(isnumber(stuid)&&isnumber(chinese)&&isnumber(math)&&isnumber(english)&&isnumber(physics)&&isnumber(chemistry))){
+          alert("请输入整数。");
+      }else{
+        $("#inputform").attr("action","/addsuccess/");
+        $("#inputform").ajaxSubmit(function(message){});
+        $("#openreveal").trigger("click");
+        $("#stuidtext").val("");
+        $("#nametext").val("");
+        $("#chinesetext").val("");
+        $("#mathtext").val("");
+        $("#englishtext").val("");
+        $("#physicstext").val("");
+        $("#chemistrytext").val("");
+      }
+    }
+  </script>
+  <script src="/static/js/app.js"></script>
+</body>
+</html>

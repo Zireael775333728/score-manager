@@ -1,0 +1,26 @@
+{%block menu%}
+<div class="top-bar">
+    <div class="top-bar-left">
+      <ul class="menu" >
+        <li class="menu-text">学生成绩管理系统</li>
+        <li><a href="/"><i class="fi-home"></i><span>主页</span></a></li>
+        <li><a href="/score"><i class="fi-results"></i><span>成绩单</span></a></li>
+        <li><a href="/add/"><i class="fi-plus"></i><span>录入成绩</span></a></li>
+      </ul>
+    </div>
+    <h5><small>by 1183710210李衡&nbsp;&nbsp;&nbsp;&nbsp;</small></h5>
+    <div class="top-bar-right">
+      <ul class="menu">
+        <li><input type="search" placeholder="考号或姓名" id="searchcontent" onKeyDown="enter()"></li>
+        <li><button type="button" class="button" id="search">查询</button></li>
+      </ul>
+    </div>
+</div>
+<script>
+  function enter(){
+    if(event.keyCode ==13){
+      $("#search").click();
+    }
+  } 
+</script>
+{%endblock%}

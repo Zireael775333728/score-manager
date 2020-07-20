@@ -1,0 +1,171 @@
+{%include "menu.html"%}
+{%include "table.html"%}
+<!DOCTYPE html>
+<html>
+<head>
+  <title>学生成绩管理系统 by 1183710210李衡</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="/static/css/foundation.min.css">
+  <link rel="stylesheet" href="/static/fonts/foundation-icons.css">
+  <script src="/static/js/vendor/jquery.js"></script>
+  <script src="/static/js/vendor/jquery.form.js"></script>
+  <script src="/static/js/vendor/foundation.min.js"></script>
+  <script src="/static/js/vendor/what-input.js"></script>
+  <script>
+  $("#search").click(function(){
+    window.location.href="/score"+"?"+$("#searchcontent").val();
+  });
+  </script>
+  <script>
+    $(document).ready(function(){
+        var url = document.location.toString();
+        if(url.indexOf("?")>=0){
+            var arrUrl = url.split("?");
+            var para = arrUrl[1];
+            $.post("/showresult/",{method:"search",searchinfo:para},function(data,status){
+                var obj=eval("("+data+")");
+                obj=eval("("+obj.data+")");
+                if(obj.length==0){
+                    alert("查询无结果");
+                    window.location.href="/score";
+                }else{
+                    for(var i=0;i<obj.length;i++){
+                        $("tbody").append("<tr"+" id=\""+String(obj[i].pk)+"\">"+"<td id=\""+"stuid\">"+obj[i].fields.stuid+"</td>"+"<td id=\""+"name\">"+obj[i].fields.name+"</td>"+"<td id=\""+"chinese\">"+String(obj[i].fields.chinese)+"</td>"+"<td id=\""+"math\">"+String(obj[i].fields.math)+"</td>"+"<td id=\""+"english\">"+String(obj[i].fields.english)+"</td>"+"<td id=\""+"physics\">"+String(obj[i].fields.physics)+"</td>"+"<td id=\""+"chemistry\">"+String(obj[i].fields.chemistry)+"</td>"+"<td id=\""+"scoresum\">"+String(obj[i].fields.scoresum)+"</td>"+"</tr>");
+                    }
+                }
+            })
+        }else if(url.indexOf("?")==-1){
+            $.post("/showresult/",{method:"all"},function(data,status){
+                var obj=eval("("+data+")");
+                obj=eval("("+obj.data+")");
+                if(obj.length==0){
+                    alert("无记录，请添加");
+                    window.location.href="/add";
+                }else{
+                    for(var i=0;i<obj.length;i++){
+                        $("tbody").append("<tr"+" id=\""+String(obj[i].pk)+"\">"+"<td id=\""+"stuid\">"+obj[i].fields.stuid+"</td>"+"<td id=\""+"name\">"+obj[i].fields.name+"</td>"+"<td id=\""+"chinese\">"+String(obj[i].fields.chinese)+"</td>"+"<td id=\""+"math\">"+String(obj[i].fields.math)+"</td>"+"<td id=\""+"english\">"+String(obj[i].fields.english)+"</td>"+"<td id=\""+"physics\">"+String(obj[i].fields.physics)+"</td>"+"<td id=\""+"chemistry\">"+String(obj[i].fields.chemistry)+"</td>"+"<td id=\""+"scoresum\">"+String(obj[i].fields.scoresum)+"</td>"+"</tr>");
+                    }
+                }
+            })
+        }
+    })
+    $(document).ready(function(){
+    var sort_dir=1;
+    $("th").each(function(self){
+      $(this).click(function(){
+        sort_dir *= -1;
+        var tarr = $("table").find("tbody>tr").get();
+        if($(this).text()=="考号"||$(this).text()=="姓名"){
+          tarr.sort(function(a,b){
+            var col1=0;
+            var col2=0;
+            col1 = $(a).children("td").eq(self).text().toUpperCase();
+            col2 = $(b).children("td").eq(self).text().toUpperCase();
+            return (col1<col2)?-sort_dir:(col1>col2)?sort_dir:0;
+          });
+        }else{
+          tarr.sort(function(a,b){
+            var col1=0;
+            var col2=0;
+            col1 = parseFloat($(a).children("td").eq(self).text());
+            col2 = parseFloat($(b).children("td").eq(self).text());
+            return (col1<col2)?-sort_dir:(col1>col2)?sort_dir:0;
+          });
+        }
+        $.each(tarr,function(i,row){
+          $("tbody").append(row);
+        });
+      });
+    });
+  });
+  </script>
+  <script>
+    setTimeout(function(){
+      $("tbody>tr").click(function(){
+        $("#openreveal").trigger("click");
+        var pk=$(this).attr("id");
+        $("#stuidre").val($("tr#"+pk).find("#stuid").text());
+        $("#namere").val($("tr#"+pk).find("#name").text());
+        $("#chinesere").val($("tr#"+pk).find("#chinese").text());
+        $("#mathre").val($("tr#"+pk).find("#math").text());
+        $("#englishre").val($("tr#"+pk).find("#english").text());
+        $("#physicsre").val($("tr#"+pk).find("#physics").text());
+        $("#chemistryre").val($("tr#"+pk).find("#chemistry").text());
+        $("#pkre").val(pk);
+      });
+    },200);
+  </script>
+  <script>
+    
+    
+  </script>
+</head>
+<body>
+  
+    <div class="tiny reveal" id="stuinfo" data-reveal data-animation-in="fade-in" data-animation-out="fade-out">
+      <form id="changeform" name="change" method="post" >
+      {%csrf_token%}
+      <br/>
+      <div class="grid-x"><div class="text-right large-4 medium-4 small-4" ><h4>考号:&nbsp;&nbsp;</h4></div><div class="text-center large-6 medium-6 small-6" ><input type="text" id="stuidre" name="stuidre"/></div></div>
+      <br/>
+      <div class="grid-x"><div class="text-right large-4 medium-4 small-4" ><h4>姓名:&nbsp;&nbsp;</h4></div><div class="text-center large-6 medium-6 small-6" ><input type="text" id="namere" name="namere"/></div></div>
+      <br/>
+      <div class="grid-x"><div class="text-right large-4 medium-4 small-4" ><h4>语文:&nbsp;&nbsp;</h4></div><div class="text-center large-6 medium-6 small-6" ><input type="text" id="chinesere" name="chinesere"/></div></div>
+      <br/>
+      <div class="grid-x"><div class="text-right large-4 medium-4 small-4" ><h4>数学:&nbsp;&nbsp;</h4></div><div class="text-center large-6 medium-6 small-6" ><input type="text" id="mathre" name="mathre"/></div></div>
+      <br/>
+      <div class="grid-x"><div class="text-right large-4 medium-4 small-4" ><h4>英语:&nbsp;&nbsp;</h4></div><div class="text-center large-6 medium-6 small-6" ><input type="text" id="englishre" name="englishre"/></div></div>
+      <br/>
+      <div class="grid-x"><div class="text-right large-4 medium-4 small-4" ><h4>物理:&nbsp;&nbsp;</h4></div><div class="text-center large-6 medium-6 small-6" ><input type="text" id="physicsre" name="physicsre"/></div></div>
+      <br/>
+      <div class="grid-x"><div class="text-right large-4 medium-4 small-4" ><h4>化学:&nbsp;&nbsp;</h4></div><div class="text-center large-6 medium-6 small-6" ><input type="text" id="chemistryre" name="chemistryre"/></div></div>
+      <br/>
+      <div style="display:none;"><input type="text" id="pkre" name="pkre"/></div>
+      </form>
+      <button class="close-button" data-close aria-label="Close reveal" type="button">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      <div style="text-align:center;">
+      <button class="button" id="changebutton" onclick="changestu();">修改</button>
+      &nbsp;&nbsp;
+      <button class="button alert" id="deletebutton" onclick="deletestu();" data-close aria-label="Close reveal">删除</button>
+      </div>
+      <button style="display:none;" id="closereveal" data-close aria-label="Close reveal"></button>
+    </div>
+  
+  <button data-open="stuinfo" id="openreveal" style="display:none;">Click me for a modal</button>
+  <script src="/static/js/app.js"></script>
+  <script>
+    function changestu(){
+      var stuid=document.forms["change"]["stuidre"].value;
+      var name=document.forms["change"]["namere"].value;
+      var chinese=document.forms["change"]["chinesere"].value;
+      var math=document.forms["change"]["mathre"].value;
+      var english=document.forms["change"]["englishre"].value;
+      var physics=document.forms["change"]["physicsre"].value;
+      var chemistry=document.forms["change"]["chemistryre"].value;
+      if(stuid==null||stuid==""||name==null||name==""||chinese==null||chinese==""||math==null||math==""||english==null||english==""||physics==null||physics==""||chemistry==null||chemistry==""){
+          alert("请输入所有数据。");
+      }else if(!(isnumber(stuid)&&isnumber(chinese)&&isnumber(math)&&isnumber(english)&&isnumber(physics)&&isnumber(chemistry))){
+          alert("请输入整数。");
+      }else{
+        $("#changeform").attr("action","/change/");
+        $("#changeform").ajaxSubmit(function(message){});
+        $("tr#"+$("#pkre").val()).html("<td id=\""+"stuid\">"+$("#stuidre").val()+"</td>"+"<td id=\""+"name\">"+$("#namere").val()+"</td>"+"<td id=\""+"chinese\">"+$("#chinesere").val()+"</td>"+"<td id=\""+"math\">"+$("#mathre").val()+"</td>"+"<td id=\""+"english\">"+$("#englishre").val()+"</td>"+"<td id=\""+"physics\">"+$("#physicsre").val()+"</td>"+"<td id=\""+"chemistry\">"+$("#chemistryre").val()+"</td>"+"<td id=\""+"scoresum\">"+String(parseInt($("#chinesere").val())+parseInt($("#mathre").val())+parseInt($("#englishre").val())+parseInt($("#physicsre").val())+parseInt($("#chemistryre").val()))+"</td>"+"</tr>");
+        $("#closereveal").trigger("click");
+      }
+    }
+    function deletestu(){
+      $("#changeform").attr("action","/delete/");
+      $("#changeform").ajaxSubmit(function(message){});
+      $("tbody").children("#"+$("#pkre").val()).remove();
+    }
+    function isnumber(a){
+        var n=/^[0-9]+$/;
+        if(a.match(n)!=null) return true;
+        else return false;
+    }
+  </script>
+</body>
+</html>
